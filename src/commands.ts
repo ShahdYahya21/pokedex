@@ -40,6 +40,11 @@ export function getCommands(): Record<string, CLICommand> {
         description: "Inspect a caught Pokemon in your Pokedex",
         callback : commandInspect,
   },
+  pokedex : {
+    name: "pokedex",
+    description: "List all caught Pokemon in your Pokedex",
+    callback : commandPokedex,
+},
 }
 }
 
@@ -201,4 +206,20 @@ export async function commandInspect(
   pokemon.types.forEach((type) => {
     console.log(`  - ${type.type.name}`);
   });
+}
+
+async function commandPokedex(state: State) {
+    const caughtPokemon = Object.values(state.pokedex);
+        if (caughtPokemon.length === 0) {
+        console.log("Your Pokedex is empty. Catch some Pokemon first!");
+        return;
+    }
+
+    console.log("Your Pokedex:");
+
+    for (const pokemon of caughtPokemon) {
+        console.log(`- ${pokemon.name} (ID: ${pokemon.id})`);
+    }
+
+
 }
