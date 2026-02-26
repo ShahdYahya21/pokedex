@@ -1,4 +1,5 @@
 import { CLICommand, State } from "./state.js";
+import { Location } from "./pokeapi.js"; 
 
 export function getCommands(): Record<string, CLICommand> {
   return {
@@ -21,7 +22,12 @@ export function getCommands(): Record<string, CLICommand> {
         name: "mapb",
         description: "Displays the map of the previous location",
         callback: commandMapb,
-    }
+    },
+    explore : {
+        name: "explore",
+        description: "Explore the current location",
+        callback: commandExplore,
+    },
 
   };
 }
@@ -77,5 +83,29 @@ export async function commandMapb(state : State) : Promise<void> {
 }
 
 
+export async function commandExplore(state: State, ...args: string[]): Promise<void> {
+  if (args.length === 0) {
+    console.log("Usage: explore <location-area-name>");
+    return;
+  }
 
+  const areaName = args.join("-"); // join in case user types multiple words
+  console.log(`Exploring ${areaName}...`);
 
+  try {
+    // Use the cached PokeAPI fetch
+    const location: Location = await state.pokeAPI.fetchLocation(areaName);
+
+    if (!location || !location.pokemon_encounters) {
+      console.log("No Pokémon found in this area.");
+      return;
+    }
+
+    console.log("Found Pokemon:");
+    location.pokemon_encounters.forEach((encounter) => {
+      console.log(" -", encounter.pokemon.name);
+    });
+  } catch (err) {
+    console.error("Failed to explore location:", err);
+  }
+}

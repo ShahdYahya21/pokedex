@@ -36,6 +36,11 @@ export class PokeAPI {
 
   async fetchLocation(locationName: string): Promise<Location> {
     const url = `${PokeAPI.baseURL}/location-area/${locationName}`;
+    const cachedData = this.#cache.get(url);
+    if (cachedData) {
+      return cachedData as Location;
+    }
+
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -48,6 +53,7 @@ export class PokeAPI {
     }
 
     const data = await response.json();
+    this.#cache.add(url, data);
     return data;
   }
 }
@@ -65,4 +71,13 @@ export type Location = {
   region: { name: string; url: string };
   game_indices: { game_index: number; version: { name: string; url: string } }[];
   names: { name: string; language: { name: string } }[];
+
+  pokemon_encounters: {
+    pokemon: { name: string; url: string };
+    version_details: {
+      max_chance: number;
+      encounter_details: any[]; 
+      version: { name: string; url: string };
+    }[];
+  }[];
 };
