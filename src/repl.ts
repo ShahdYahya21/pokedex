@@ -33,7 +33,7 @@ export async function startREPL(State: State) {
     const commandName = words[0];
     const locationArgs = words.slice(1).join(" ");
     const command = commands[commandName];
-    const state: State = { commands, rl, pokeAPI, nextLocationsURL, prevLocationsURL};
+    const state: State = { commands, rl, pokeAPI, nextLocationsURL, prevLocationsURL, pokedex: State.pokedex };
 
     if (command) {
      try {

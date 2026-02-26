@@ -3,6 +3,7 @@ import readline from "node:readline";
 import { createInterface } from "node:readline";
 import { getCommands } from "./commands.js";
 import { PokeAPI } from "./pokeapi.js";
+import { Pokemon } from "./pokeapi.js";
 
 export type State = {
   commands: Record<string, CLICommand>;
@@ -10,6 +11,7 @@ export type State = {
   pokeAPI: PokeAPI;
   nextLocationsURL?: string;
   prevLocationsURL?: string;
+  pokedex: Record<string, Pokemon>;
 }
 
 export type CLICommand = {
@@ -32,7 +34,8 @@ export function initState(): State {
 
   const nextLocationsURL = undefined; 
   const prevLocationsURL = undefined;
+  const pokedex: Record<string, Pokemon> = {};
 
 
-  return { rl, commands, pokeAPI, nextLocationsURL, prevLocationsURL };
+  return { rl, commands, pokeAPI, nextLocationsURL, prevLocationsURL, pokedex };
 }
